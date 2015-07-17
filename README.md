@@ -9,11 +9,13 @@ Sassで、HSBとRGBの相互変換をする関数
 
 ###call function
 
-    // calculation hue
-    background: calc-color-hue(#9673FF, -25); // #738aff
+```:css
+// calculation hue
+background: calc-color-hue(#9673FF, -25); // #738aff
 
-    // calculation saturation
-    background: calc-color-saturation(#9673FF, -25); // #c5b2ff
+// calculation saturation
+background: calc-color-saturation(#9673FF, -25); // #c5b2ff
 
-    // calculation bright
-    background: calc-color-bright(#9673FF, -25); // #7056bf
+// calculation bright
+background: calc-color-bright(#9673FF, -25); // #7056bf
+```
