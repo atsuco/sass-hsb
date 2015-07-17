@@ -1,0 +1,78 @@
+// rgb to hsb
+@function rgb-to-hsb($baseColor) {
+    $r-rgb: red($baseColor);
+    $g-rgb: green($baseColor);
+    $b-rgb: blue($baseColor);
+    $max: max($r-rgb, $g-rgb, $b-rgb);
+    $min: min($r-rgb, $g-rgb, $b-rgb);
+
+    $h-hsb: 0;
+    @if $max == $min {
+        $h-hsb: 0;
+    }@else if $max == $r-rgb {
+        $h-hsb: 60 * (($g-rgb - $b-rgb) / ($max - $min));
+    } @else if $max == $g-rgb {
+        $h-hsb: 60 * (($b-rgb - $r-rgb) / ($max - $min)) + 120;
+    } @else if $max == $b-rgb {
+        $h-hsb: 60 * (($r-rgb - $g-rgb) / ($max - $min)) + 240;
+    }
+
+    $h-hsb: if($h-hsb < 0, $h-hsb + 360, $h-hsb);
+    $s-hsb: (($max - $min) / $max) * 100;
+    $b-hsb: ($max / 255) * 100;
+
+    @return $h-hsb, $s-hsb, $b-hsb;
+}
+
+// hsb to rgb
+@function hsb-to-rgb($h-hsb, $s-hsb, $b-hsb) {
+    $max: $b-hsb * 255 / 100;
+    $min: $max - (($s-hsb / 100) * $max);
+    $r-rgb: 0;
+    $g-rgb: 0;
+    $b-rgb: 0;
+
+    @if 0 <= $h-hsb and $h-hsb <= 60 {
+        $r-rgb: $max;
+        $g-rgb: ($h-hsb / 60) * ($max - $min) + $min;
+        $b-rgb: $min;
+    } @else if 61 <= $h-hsb and $h-hsb <= 120 {
+        $r-rgb: ((120 - $h-hsb) / 60) * ($max - $min) + $min;
+        $g-rgb: $max;
+        $b-rgb: $min;
+    } @else if 121 <= $h-hsb and $h-hsb <= 180 {
+        $r-rgb: $min;
+        $g-rgb: $max;
+        $b-rgb: (($h-hsb - 120) / 60) * ($max - $min) + $min;
+    } @else if 181 <= $h-hsb and $h-hsb <= 240 {
+        $r-rgb: $min;
+        $g-rgb: ((240 - $h-hsb) / 60) * ($max - $min) + $min;
+        $b-rgb: $max;
+    } @else if 241 <= $h-hsb and $h-hsb <= 300 {
+        $r-rgb: (($h-hsb - 240) / 60) * ($max - $min) + $min;
+        $g-rgb: $min;
+        $b-rgb: $max;
+    } @else if 301 <= $h-hsb and $h-hsb <= 360 {
+        $r-rgb: $max;
+        $g-rgb: $min;
+        $b-rgb: ((360 - $h-hsb) / 60) * ($max - $min) + $min;
+    }
+
+    @return rgb($r-rgb, $g-rgb, $b-rgb);
+}
+
+// calculation hue
+@function calc-color-hue($baseColor, $num) {
+    $hsb: rgb-to-hsb($baseColor);
+    @return hsb-to-rgb(nth($hsb, 1) + $num, nth($hsb, 2), nth($hsb, 3));
+}
+// calculation saturation
+@function calc-color-saturation($baseColor, $num) {
+    $hsb: rgb-to-hsb($baseColor);
+    @return hsb-to-rgb(nth($hsb, 1), nth($hsb, 2) + $num, nth($hsb, 3));
+}
+// calculation bright
+@function calc-color-bright($baseColor, $num) {
+    $hsb: rgb-to-hsb($baseColor);
+    @return hsb-to-rgb(nth($hsb, 1), nth($hsb, 2), nth($hsb, 3) + $num);
+}
